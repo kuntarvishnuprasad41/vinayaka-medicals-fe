@@ -1,4 +1,2 @@
-import { Sun } from 'lucide-react-native';
-import { iconWithClassName } from './iconWithClassName';
-iconWithClassName(Sun);
-export { Sun };
+import { Lib } from '@rnr/reusables';
+export const { Sun } = Lib.Icons;
