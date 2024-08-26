@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, Linking } from 'react-native';
 import { useColorScheme } from 'react-native';
 
 const LoginScreen = () => {
@@ -8,6 +8,11 @@ const LoginScreen = () => {
 
   const handleLogin = () => {
     // Handle login logic here
+  };
+
+  const handleCall = () => {
+    const phoneNumber = 'tel:+919986084580';
+    Linking.openURL(phoneNumber);
   };
 
   return (
@@ -40,13 +45,13 @@ const LoginScreen = () => {
           <Text className="text-white text-center font-semibold text-lg">Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}} className="mt-4">
+        <TouchableOpacity onPress={handleCall} className="mt-4">
           <Text className={`text-center ${isDarkMode ? 'text-purple-400' : 'text-purple-700'}`}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity onPress={() => {}} className="mt-8">
-        <Text className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-white'}`}>Don't have an account? <Text className="font-semibold underline">Sign Up</Text></Text>
+      <TouchableOpacity onPress={handleCall} className="mt-8">
+        <Text className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-white'}`}>Don't have an account? Request for <Text className="font-semibold underline">Id</Text></Text>
       </TouchableOpacity>
     </View>
   );
