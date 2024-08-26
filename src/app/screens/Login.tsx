@@ -1,13 +1,15 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Linking } from 'react-native';
 import { useColorScheme } from 'react-native';
+
 
 const LoginScreen = () => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
   const handleLogin = () => {
-    // Handle login logic here
+     router.push('screens/Profile')
   };
 
   const handleCall = () => {
