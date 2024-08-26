@@ -8,26 +8,25 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  password  String
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  stores    Store[]   @relation("UserStores") // Admins can manage stores
-  payments  Payment[] @relation("UserPayments") // Users can make payments
+  id       Int       @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  password String
+  role     Role
+  address  String? // Optional address for users who represent medical stores
+  entries  Entry[]
+  payments Payment[]
 }
 
-model Store {
-  id        Int       @id @default(autoincrement())
-  name      String
-  address   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  userId    Int
-  user      User      @relation("UserStores", fields: [userId], references: [id]) // Store belongs to a User
-  payments  Payment[] @relation("StorePayments") // Store has many payments
+model Entry {
+  id          Int      @id @default(autoincrement())
+  billNumber  String
+  amount      Float
+  paymentType String
+  amountPaid  Float
+  entryDate   DateTime @default(now())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 model Payment {
@@ -37,11 +36,14 @@ model Payment {
   dateTime   DateTime    @default(now())
   type       PaymentType
   amountPaid Float
-  storeId    Int
-  store      Store       @relation("StorePayments", fields: [storeId], references: [id]) // Payment is linked to a Store
   userId     Int
-  user       User        @relation("UserPayments", fields: [userId], references: [id]) // Payment is linked to a User
-  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  MEDICAL_STORE
+  DATA_ENTRY
 }
 
 enum PaymentType {
@@ -49,10 +51,4 @@ enum PaymentType {
   UPI
   CREDIT
   PARTIAL
-}
-
-enum Role {
-  ADMIN
-  MEDICAL_DATA_ENTRY
-  USER
 }
