@@ -4,12 +4,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfileScreen from "../screens/Profile";
 import PaymentEntryScreen from "../screens/PaymentEntry";
+import StoreCreationScreen from "../screens/StoreCreationScreen";
+import AddUserScreen from "../screens/AddUser";
 import { useRecoilState } from "recoil";
 import { loginStatusState } from "../../store/loginAtom";
 import LoginScreen from "../screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -19,7 +19,7 @@ const HomeStack = () => (
     <Stack.Screen
       name="Home"
       component={PaymentEntryScreen}
-      options={{ title: "Buyology | Home", headerShown: false }}
+      options={{ title: " Home", headerShown: false }}
     />
   </Stack.Navigator>
 );
@@ -29,7 +29,17 @@ const SettingsStack = () => (
     <Stack.Screen
       name="Profile"
       component={ProfileScreen}
-      options={{ title: "Buyology | Profile", headerShown: false }}
+      options={{ title: "Profile", headerShown: false }}
+    />
+    <Stack.Screen
+      name="CreateStore"
+      component={StoreCreationScreen}
+      options={{ title: "CreateStore", headerShown: false }}
+    />
+    <Stack.Screen
+      name="AddUserScreen"
+      component={AddUserScreen}
+      options={{ title: "AddUserScreen", headerShown: false }}
     />
   </Stack.Navigator>
 );
@@ -98,4 +108,8 @@ export const setLogout = async (setLoggedIn) => {
 
   // Update the Recoil state to reflect the logged-in status
   setLoggedIn(false);
+};
+
+export const getUser = async () => {
+  return await AsyncStorage.getItem("user");
 };

@@ -1,23 +1,47 @@
 import { loginStatusState } from "@/store/loginAtom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useColorScheme } from "react-native";
 import { useRecoilState } from "recoil";
-import { setLogout } from "../(tabs)/_layout";
+import { getUser, setLogout } from "../(tabs)/_layout";
+import { useRouter } from "expo-router"; // Import useRouter for navigation
 
 const ProfileScreen = () => {
-  const [role, setRole] = useState("Admin"); // Default role is Admin, change as needed
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
   const [_, setLogin] = useRecoilState(loginStatusState);
+  const [user, setUser] = useState();
+  const router = useRouter();
 
   const handleEditProfile = () => {
     // Handle edit profile action
   };
 
+  const userFromLocal = async () => {
+    const storedUser = await getUser();
+    return storedUser;
+  };
+
   const handleLogout = () => {
     // Handle logout action
     setLogout(setLogin);
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const u = await userFromLocal();
+      setUser(JSON.parse(u));
+    };
+
+    fetchUser();
+  }, []);
+
+  const navigateToAddUser = () => {
+    router.push("screens/AddUser"); // Navigate to AddUserScreen
+  };
+
+  const navigateToStoreCreation = () => {
+    router.push("screens/StoreCreationScreen"); // Navigate to StoreCreationScreen
   };
 
   return (
@@ -39,14 +63,16 @@ const ProfileScreen = () => {
               isDarkMode ? "text-white" : "text-blue-900"
             }`}
           >
-            John Doe
+            {user?.name}
           </Text>
           <View
             className={`ml-2 px-2 py-1 rounded-full ${
               isDarkMode ? "bg-gray-700" : "bg-indigo-600"
             }`}
           >
-            <Text className="text-white text-xs font-semibold">{role}</Text>
+            <Text className="text-white text-xs font-semibold">
+              {user?.role}
+            </Text>
           </View>
         </View>
         <Text
@@ -54,52 +80,36 @@ const ProfileScreen = () => {
             isDarkMode ? "text-gray-300" : "text-white"
           }`}
         >
-          johndoe@example.com
+          {user?.email}
         </Text>
       </View>
 
-      <View
-        className={`rounded-2xl shadow-lg p-6 ${
-          isDarkMode ? "bg-gray-800" : "bg-white"
-        } mb-6`}
-      >
-        <Text
-          className={`text-lg font-semibold ${
-            isDarkMode ? "text-white" : "text-blue-900"
-          }`}
-        >
-          Profile Information
-        </Text>
-        <View className="mt-4">
-          <Text
-            className={`text-base ${
-              isDarkMode ? "text-gray-300" : "text-gray-700"
+      {/* Conditionally render buttons if the user is an admin */}
+      {user?.role === "ADMIN" && (
+        <View className="mb-8">
+          <TouchableOpacity
+            onPress={navigateToAddUser}
+            className={`py-3 mb-4 rounded-lg shadow-md ${
+              isDarkMode ? "bg-blue-600" : "bg-indigo-500"
             }`}
           >
-            Phone: +123 456 7890
-          </Text>
-          <Text
-            className={`text-base mt-2 ${
-              isDarkMode ? "text-gray-300" : "text-gray-700"
+            <Text className="text-white text-center font-semibold text-lg">
+              Add User
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={navigateToStoreCreation}
+            className={`py-3 rounded-lg shadow-md ${
+              isDarkMode ? "bg-green-600" : "bg-green-500"
             }`}
           >
-            Address: 123 Main Street, City, Country
-          </Text>
+            <Text className="text-white text-center font-semibold text-lg">
+              Create Store
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
-
-      <TouchableOpacity
-        onPress={handleEditProfile}
-        className={`py-3 rounded-lg mb-4 shadow-md ${
-          isDarkMode
-            ? "bg-purple-600"
-            : "bg-gradient-to-r from-indigo-500 to-purple-600"
-        }`}
-      >
-        <Text className="text-white text-center font-semibold text-lg">
-          Edit Profile
-        </Text>
-      </TouchableOpacity>
+      )}
 
       <TouchableOpacity
         onPress={handleLogout}

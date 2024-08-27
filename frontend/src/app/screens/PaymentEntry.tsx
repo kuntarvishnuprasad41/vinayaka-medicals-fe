@@ -8,8 +8,8 @@ import {
   StyleSheet,
 } from "react-native";
 import { useColorScheme } from "react-native";
-
-// Replace with your API base URL
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Ensure you have AsyncStorage installed
+import { BASE_URL } from "@/utils/BaseUrl";
 
 const PaymentEntryScreen = () => {
   const colorScheme = useColorScheme();
@@ -17,10 +17,56 @@ const PaymentEntryScreen = () => {
 
   const [billNumber, setBillNumber] = useState("");
   const [amount, setAmount] = useState("");
-  const [paymentType, setPaymentType] = useState("cash"); // Default to 'cash'
+  const [paymentType, setPaymentType] = useState("CASH"); // Default to 'cash'
   const [amountPaid, setAmountPaid] = useState("");
 
-  const handleSave = async () => {};
+  const handleSave = async () => {
+    try {
+      // Get the token from AsyncStorage
+      const token = await AsyncStorage.getItem("authToken");
+
+      // Make sure all fields are filled out
+      if (!billNumber || !amount || !amountPaid || !paymentType) {
+        Alert.alert("Error", "Please fill out all fields");
+        return;
+      }
+
+      // API call to save payment details
+      const response = await fetch(BASE_URL + "/payments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Attach token for authorization
+        },
+        body: JSON.stringify({
+          billNumber,
+          amount: parseFloat(amount), // Ensure amount is sent as a number
+          amountPaid: parseFloat(amountPaid), // Ensure amountPaid is sent as a number
+          paymentType,
+          storeId: 1, // Replace with the actual storeId or fetch it dynamically
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Success", "Payment details saved successfully");
+        // Optionally clear the form
+        setBillNumber("");
+        setAmount("");
+        setAmountPaid("");
+        setPaymentType("CASH");
+      } else {
+        Alert.alert("Error", data.error || "Failed to save payment details");
+      }
+    } catch (error) {
+      console.error("Error saving payment details:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred while saving payment details. Please try again."
+      );
+    }
+  };
 
   return (
     <View
@@ -92,10 +138,10 @@ const PaymentEntryScreen = () => {
 
         <View style={styles.buttonGroup}>
           <TouchableOpacity
-            onPress={() => setPaymentType("cash")}
+            onPress={() => setPaymentType("CASH")}
             style={[
               styles.paymentButton,
-              paymentType === "cash"
+              paymentType === "CASH"
                 ? { backgroundColor: isDarkMode ? "#6D28D9" : "#4F46E5" }
                 : { backgroundColor: isDarkMode ? "#4B5563" : "#E5E7EB" },
             ]}
@@ -103,12 +149,12 @@ const PaymentEntryScreen = () => {
             <Text
               style={[
                 styles.paymentButtonText,
-                paymentType === "cash"
+                paymentType === "CASH"
                   ? { color: "#FFFFFF" }
                   : { color: isDarkMode ? "#9CA3AF" : "#000000" },
               ]}
             >
-              Cash
+              CASH
             </Text>
           </TouchableOpacity>
 
@@ -130,6 +176,27 @@ const PaymentEntryScreen = () => {
               ]}
             >
               UPI
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setPaymentType("CREDIT")}
+            style={[
+              styles.paymentButton,
+              paymentType === "CREDIT"
+                ? { backgroundColor: isDarkMode ? "#6D28D9" : "#4F46E5" }
+                : { backgroundColor: isDarkMode ? "#4B5563" : "#E5E7EB" },
+            ]}
+          >
+            <Text
+              style={[
+                styles.paymentButtonText,
+                paymentType === "CREDIT"
+                  ? { color: "#FFFFFF" }
+                  : { color: isDarkMode ? "#9CA3AF" : "#000000" },
+              ]}
+            >
+              CREDIT
             </Text>
           </TouchableOpacity>
         </View>
