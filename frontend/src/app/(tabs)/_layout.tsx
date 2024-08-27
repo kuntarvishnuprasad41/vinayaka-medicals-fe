@@ -58,10 +58,6 @@ export default function TabLayout() {
     return <LoginScreen />;
   }
 
-  // Initialize the auth state from AsyncStorage
-
-  // Initialize the auth state from AsyncStorage
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
