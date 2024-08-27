@@ -15,7 +15,7 @@
         }
       ]
     ],
-    "name": "frontend",
+    "name": "Vinayaka Medicals",
     "slug": "frontend",
     "extra": {
       "router": {
@@ -27,6 +27,12 @@
     },
     "android": {
       "package": "com.kuvi41.frontend"
+    },
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     }
   }
 }

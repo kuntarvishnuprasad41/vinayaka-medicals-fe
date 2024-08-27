@@ -74,6 +74,7 @@ const PaymentEntryScreen = () => {
         styles.container,
         { backgroundColor: isDarkMode ? "#1F2937" : "#F3F4F6" },
       ]}
+      className="pt-32"
     >
       <View style={styles.header}>
         <Text

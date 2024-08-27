@@ -11,6 +11,7 @@ import { useRecoilState } from "recoil";
 import { loginStatusState } from "../../store/loginAtom";
 import LoginScreen from "../screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();

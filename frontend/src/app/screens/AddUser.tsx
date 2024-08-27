@@ -7,9 +7,10 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
-  Picker, // Use Picker for dropdown
+  // Use Picker for dropdown
 } from "react-native";
 import { useColorScheme } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 const AddUserScreen = () => {
   const colorScheme = useColorScheme();

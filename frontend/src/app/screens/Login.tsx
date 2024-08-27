@@ -12,10 +12,16 @@ import {
 import { useColorScheme } from "react-native";
 import { useRecoilState } from "recoil";
 import { loginStatusState } from "../../store/loginAtom";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@/utils/BaseUrl";
-import ProfileScreen from "./Profile";
-import { setLogin } from "../(tabs)/_layout";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export const setLogin = async (token, user, setLoggedIn) => {
+  await AsyncStorage.setItem("authToken", token);
+  await AsyncStorage.setItem("user", JSON.stringify(user));
+
+  // Update the Recoil state to reflect the logged-in status
+  setLoggedIn(true);
+};
 
 const LoginScreen = () => {
   const router = useRouter();
