@@ -240,6 +240,77 @@ app.get('/payments', authenticateToken, async (req, res) => {
     }
 });
 
+app.post('/reset-password', authenticateToken, async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        // Fetch the user's current password from the database
+        const user = await prisma.user.findUnique({
+            where: { id: req.user.userId },
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Compare the provided old password with the current password
+        const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+        if (!isOldPasswordValid) {
+            return res.status(401).json({ error: 'Incorrect old password' });
+        }
+
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the user's password in the database
+        await prisma.user.update({
+            where: { id: req.user.userId },
+            data: { password: hashedNewPassword },
+        });
+
+        res.json({ message: 'Password reset successful' });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).json({ error: 'Failed to reset password' });
+    }
+});
+
+app.post('/admin/reset-password', authenticateToken, async (req, res) => {
+    const { email, newPassword } = req.body;
+
+    try {
+        // Check if the current user is an admin
+        if (req.user.role !== 'ADMIN') {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
+        // Fetch the user by email
+        const user = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the user's password in the database
+        await prisma.user.update({
+            where: { email },
+            data: { password: hashedNewPassword },
+        });
+
+        res.json({ message: 'Password reset successful' });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).json({ error: 'Failed to reset password' });
+    }
+});
+
+
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
 });
