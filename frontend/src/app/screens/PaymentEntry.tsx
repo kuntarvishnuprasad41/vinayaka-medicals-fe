@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
 import { useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Ensure you have AsyncStorage installed
 import { BASE_URL } from "@/utils/BaseUrl";
+import { getUser } from "../(tabs)/_layout";
+import PaymentsScreen from "./PaymentsScreen";
 
 const PaymentEntryScreen = () => {
   const colorScheme = useColorScheme();
@@ -67,6 +69,30 @@ const PaymentEntryScreen = () => {
       );
     }
   };
+
+  const [user, setUser] = useState();
+
+  const userFromLocal = async () => {
+    const storedUser = await getUser();
+    return storedUser;
+  };
+
+  // console.log(user);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const u = await userFromLocal();
+      setUser(JSON.parse(u));
+    };
+
+    fetchUser();
+  }, []);
+
+  if (user?.role == "ADMIN") {
+    console.log(user.role);
+
+    return <PaymentsScreen />;
+  }
 
   return (
     <View

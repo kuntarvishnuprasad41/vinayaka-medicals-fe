@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
@@ -104,6 +105,7 @@ const PaymentsScreen = () => {
   const renderPaymentItem = ({ item }) => (
     <View style={styles.tableRow}>
       <Text style={styles.tableCell}>{item.billNumber}</Text>
+      <Text style={styles.tableCell}>{item.amount.toFixed(2)}</Text>
       <Text style={styles.tableCell}>{item.amountPaid.toFixed(2)}</Text>
       <Text style={styles.tableCell}>{item.paymentType}</Text>
       <Text style={styles.tableCell}>
@@ -121,6 +123,7 @@ const PaymentsScreen = () => {
         styles.container,
         { backgroundColor: isDarkMode ? "#1F2937" : "#F3F4F6" },
       ]}
+      className="pt-20"
     >
       <Text
         style={[
@@ -159,25 +162,27 @@ const PaymentsScreen = () => {
         />
       )}
 
-      <View
-        style={[
-          styles.tableHeader,
-          { backgroundColor: isDarkMode ? "#374151" : "#E5E7EB" },
-        ]}
-      >
-        <Text style={styles.tableHeaderCell}>Bill No</Text>
-        <Text style={styles.tableHeaderCell}>Amount Paid</Text>
-        <Text style={styles.tableHeaderCell}>Payment Type</Text>
-        <Text style={styles.tableHeaderCell}>Time</Text>
-      </View>
+      <ScrollView>
+        <View
+          style={[
+            styles.tableHeader,
+            { backgroundColor: isDarkMode ? "#374151" : "#E5E7EB" },
+          ]}
+        >
+          <Text style={styles.tableHeaderCell}>Bill No</Text>
+          <Text style={styles.tableHeaderCell}>Amount </Text>
+          <Text style={styles.tableHeaderCell}>Amount Paid</Text>
+          <Text style={styles.tableHeaderCell}>Payment Type</Text>
+          <Text style={styles.tableHeaderCell}>Time</Text>
+        </View>
 
-      <FlatList
-        data={payments}
-        renderItem={renderPaymentItem}
-        keyExtractor={(item) => item.id.toString()}
-        style={styles.table}
-      />
-
+        <FlatList
+          data={payments}
+          renderItem={renderPaymentItem}
+          keyExtractor={(item) => item.id.toString()}
+          style={styles.table}
+        />
+      </ScrollView>
       <View
         style={[
           styles.summaryContainer,
