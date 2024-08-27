@@ -16,6 +16,17 @@
       ]
     ],
     "name": "frontend",
-    "slug": "frontend"
+    "slug": "frontend",
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "0cca558e-7947-4399-8380-eb102f2dfbbf"
+      }
+    },
+    "android": {
+      "package": "com.kuvi41.frontend"
+    }
   }
 }
