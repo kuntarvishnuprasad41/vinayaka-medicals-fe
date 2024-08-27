@@ -1,1 +1,1 @@
-export const BASE_URL = "https://tobh.onrender.com/";
+export const BASE_URL = "https://tobh.onrender.com";
