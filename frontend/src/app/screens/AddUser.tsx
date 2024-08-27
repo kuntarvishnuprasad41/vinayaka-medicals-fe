@@ -62,7 +62,7 @@ const AddUserScreen = () => {
         },
         body: JSON.stringify({
           name,
-          email,
+          email: email.toLowerCase(),
           password,
           storeId: parseInt(storeId, 10), // Convert storeId to a number
         }),
