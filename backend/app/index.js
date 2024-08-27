@@ -26,6 +26,9 @@ app.post('/users', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    console.log(hashedPassword);
+
+
     const user = await prisma.user.create({
         data: {
             name,
@@ -43,6 +46,7 @@ app.post('/users', async (req, res) => {
 app.post('/signup', async (req, res) => {
     const { name, email, password, role, storeId } = req.body;
 
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
@@ -55,6 +59,9 @@ app.post('/signup', async (req, res) => {
                 store: storeId ? { connect: { id: storeId } } : undefined,
             },
         });
+
+        console.log(user);
+
 
         const token = jwt.sign({ userId: user.id, role: user.role }, SECRET_KEY, {
             expiresIn: '1h',
@@ -70,7 +77,9 @@ app.post('/signup', async (req, res) => {
             },
         });
     } catch (error) {
-        res.status(400).json({ error: 'User already exists' });
+
+
+        res.status(400).json({ error: 'User already exists' + error });
     }
 });
 
