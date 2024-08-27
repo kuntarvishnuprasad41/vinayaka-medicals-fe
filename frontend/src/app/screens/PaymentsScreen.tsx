@@ -13,6 +13,15 @@ import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "react-native";
 import { BASE_URL } from "../../utils/BaseUrl";
+export const getAuthToken = async () => {
+  try {
+    const token = await AsyncStorage.getItem("authToken");
+    return token;
+  } catch (error) {
+    console.error("Error retrieving auth token:", error);
+    return null;
+  }
+};
 
 const PaymentsScreen = () => {
   const colorScheme = useColorScheme();
@@ -25,16 +34,6 @@ const PaymentsScreen = () => {
   const [payments, setPayments] = useState([]);
   const [totalToday, setTotalToday] = useState(0);
   const [openingBalance, setOpeningBalance] = useState(0);
-
-  const getAuthToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem("authToken");
-      return token;
-    } catch (error) {
-      console.error("Error retrieving auth token:", error);
-      return null;
-    }
-  };
 
   // Fetch stores on component mount
   useEffect(() => {
