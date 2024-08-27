@@ -1,11 +1,12 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import React from "react";
+import React, { useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfileScreen from "../screens/Profile";
 import PaymentEntryScreen from "../screens/PaymentEntry";
 import StoreCreationScreen from "../screens/StoreCreationScreen";
 import AddUserScreen from "../screens/AddUser";
+import PaymentsScreen from "../screens/PaymentsScreen";
 import { useRecoilState } from "recoil";
 import { loginStatusState } from "../../store/loginAtom";
 import LoginScreen from "../screens/Login";
@@ -41,6 +42,11 @@ const SettingsStack = () => (
       component={AddUserScreen}
       options={{ title: "AddUserScreen", headerShown: false }}
     />
+    <Stack.Screen
+      name="PaymentsScreen"
+      component={PaymentsScreen}
+      options={{ title: "PaymentsScreen", headerShown: false }}
+    />
   </Stack.Navigator>
 );
 
@@ -50,6 +56,10 @@ export default function TabLayout() {
   if (!loggedIn) {
     return <LoginScreen />;
   }
+
+  // Initialize the auth state from AsyncStorage
+
+  // Initialize the auth state from AsyncStorage
 
   return (
     <Tab.Navigator

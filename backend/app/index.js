@@ -175,6 +175,71 @@ app.get('/stores', async (req, res) => {
     }
 });
 
+app.get('/payments', authenticateToken, async (req, res) => {
+    const { storeId } = req.query;
+    let { date } = req.query; // Accept date as a query parameter
+
+    if (!storeId) {
+        return res.status(400).json({ error: 'Store ID is required' });
+    }
+
+    try {
+        // Use the provided date or default to today
+        const selectedDate = date ? new Date(date) : new Date();
+        const previousDay = new Date(selectedDate);
+        previousDay.setDate(selectedDate.getDate() - 1);
+
+        // Get payments for the selected date (default to today if no date is provided)
+        const payments = await prisma.payment.findMany({
+            where: {
+                storeId: parseInt(storeId, 10),
+                createdAt: {
+                    gte: new Date(selectedDate.setHours(0, 0, 0, 0)),
+                    lt: new Date(selectedDate.setHours(23, 59, 59, 999)),
+                },
+            },
+            select: {
+                id: true,
+                billNumber: true,
+                amount: true,
+                amountPaid: true,
+                paymentType: true,
+                createdAt: true,
+            },
+        });
+
+        // Calculate total for the selected date
+        const totalToday = payments.reduce((total, payment) => total + payment.amountPaid, 0);
+
+        // Get payments for the previous day
+        const paymentsPreviousDay = await prisma.payment.findMany({
+            where: {
+                storeId: parseInt(storeId, 10),
+                createdAt: {
+                    gte: new Date(previousDay.setHours(0, 0, 0, 0)),
+                    lt: new Date(previousDay.setHours(23, 59, 59, 999)),
+                },
+            },
+            select: {
+                id: true,
+                amountPaid: true,
+            },
+        });
+
+        // Calculate total for the previous day (opening balance)
+        const totalPreviousDay = paymentsPreviousDay.reduce((total, payment) => total + payment.amountPaid, 0);
+
+        res.json({
+            payments,
+            totalToday,
+            openingBalance: totalPreviousDay,
+        });
+    } catch (error) {
+        console.error('Error retrieving payments:', error);
+        res.status(500).json({ error: 'Failed to retrieve payments' });
+    }
+});
+
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
 });

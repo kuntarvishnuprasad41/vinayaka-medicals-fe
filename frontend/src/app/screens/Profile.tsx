@@ -44,6 +44,10 @@ const ProfileScreen = () => {
     router.push("screens/StoreCreationScreen"); // Navigate to StoreCreationScreen
   };
 
+  const paymentsList = () => {
+    router.push("screens/PaymentsScreen");
+  };
+
   return (
     <ScrollView
       className={`flex-1 ${
@@ -100,12 +104,23 @@ const ProfileScreen = () => {
 
           <TouchableOpacity
             onPress={navigateToStoreCreation}
-            className={`py-3 rounded-lg shadow-md ${
+            className={`py-3 mb-4 rounded-lg shadow-md ${
               isDarkMode ? "bg-green-600" : "bg-green-500"
             }`}
           >
             <Text className="text-white text-center font-semibold text-lg">
               Create Store
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={paymentsList}
+            className={`px-2  py-3 rounded-lg shadow-md ${
+              isDarkMode ? "bg-green-600" : "bg-green-500"
+            }`}
+          >
+            <Text className="text-white text-center font-semibold text-lg">
+              Payments List
             </Text>
           </TouchableOpacity>
         </View>
