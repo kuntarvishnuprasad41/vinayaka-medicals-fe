@@ -10,18 +10,22 @@ import {
   Alert,
 } from "react-native";
 import { useColorScheme } from "react-native";
+import { useRecoilState } from "recoil";
+import { loginStatusState } from "../../store/loginAtom";
 
 const LoginScreen = () => {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
+  const [_, setLoggedIn] = useRecoilState(loginStatusState);
 
   // State for email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    router.push("screens/Profile");
+    // router.push("screens/Profile");
+    setLoggedIn(true);
   };
 
   const handleCall = () => {

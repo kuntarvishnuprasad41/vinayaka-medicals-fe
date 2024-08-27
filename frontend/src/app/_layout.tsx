@@ -1,12 +1,15 @@
 import "../global.css";
+import { RecoilRoot } from "recoil";
 
 import { Stack } from "expo-router/stack";
 
 export default function Layout() {
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <RecoilRoot>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </RecoilRoot>
   );
 }
 

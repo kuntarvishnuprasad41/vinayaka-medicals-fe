@@ -4,6 +4,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfileScreen from "../screens/Profile";
 import PaymentEntryScreen from "../screens/PaymentEntry";
+import { useRecoilState } from "recoil";
+import { loginStatusState } from "../../store/loginAtom";
+import LoginScreen from "../screens/Login";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -29,6 +32,12 @@ const SettingsStack = () => (
 );
 
 export default function TabLayout() {
+  const [loggedIn, setLoggedIn] = useRecoilState(loginStatusState);
+
+  if (!loggedIn) {
+    return <LoginScreen />;
+  }
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
