@@ -1,11 +1,15 @@
+import { loginStatusState } from "@/store/loginAtom";
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useColorScheme } from "react-native";
+import { useRecoilState } from "recoil";
+import { setLogout } from "../(tabs)/_layout";
 
 const ProfileScreen = () => {
   const [role, setRole] = useState("Admin"); // Default role is Admin, change as needed
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
+  const [_, setLogin] = useRecoilState(loginStatusState);
 
   const handleEditProfile = () => {
     // Handle edit profile action
@@ -13,6 +17,7 @@ const ProfileScreen = () => {
 
   const handleLogout = () => {
     // Handle logout action
+    setLogout(setLogin);
   };
 
   return (

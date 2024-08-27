@@ -12,20 +12,56 @@ import {
 import { useColorScheme } from "react-native";
 import { useRecoilState } from "recoil";
 import { loginStatusState } from "../../store/loginAtom";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "@/utils/BaseUrl";
+import ProfileScreen from "./Profile";
+import { setLogin } from "../(tabs)/_layout";
 
 const LoginScreen = () => {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
-  const [_, setLoggedIn] = useRecoilState(loginStatusState);
 
   // State for email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [_, setLoggedIn] = useRecoilState(loginStatusState);
 
   const handleLogin = async () => {
-    // router.push("screens/Profile");
-    setLoggedIn(true);
+    try {
+      const response = await fetch(BASE_URL + "/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.toLowerCase(),
+          password,
+        }),
+      });
+
+      console.log(response);
+
+      const data = await response.json();
+
+      console.log("data");
+
+      if (response.ok) {
+        // Assuming the response contains the token and user info
+        const { token, user } = data;
+
+        setLogin(token, user, setLoggedIn);
+
+        // Store the token in secure storage (AsyncStorage or SecureStore)
+
+        // Optionally, navigate to another screen, e.g., Profile
+      } else {
+        Alert.alert("Login Failed", data.error || "Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      Alert.alert("Login Failed", "An error occurred. Please try again.");
+    }
   };
 
   const handleCall = () => {

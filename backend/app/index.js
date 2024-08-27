@@ -4,10 +4,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const app = express();
 const prisma = new PrismaClient();
+const cors = require('cors');
 
-const SECRET_KEY = 'your_secret_key'; // Use a strong key and keep it secure
+const SECRET_KEY = 'PIOASYEFNJGCeq9876123jkASDFD';  
 
 app.use(express.json());
+app.use(cors());
 
 // Create a store (Admin only)
 app.post('/stores', async (req, res) => {

@@ -7,6 +7,9 @@ import PaymentEntryScreen from "../screens/PaymentEntry";
 import { useRecoilState } from "recoil";
 import { loginStatusState } from "../../store/loginAtom";
 import LoginScreen from "../screens/Login";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -80,3 +83,19 @@ export default function TabLayout() {
     </Tab.Navigator>
   );
 }
+
+export const setLogin = async (token, user, setLoggedIn) => {
+  await AsyncStorage.setItem("authToken", token);
+  await AsyncStorage.setItem("user", JSON.stringify(user));
+
+  // Update the Recoil state to reflect the logged-in status
+  setLoggedIn(true);
+};
+
+export const setLogout = async (setLoggedIn) => {
+  await AsyncStorage.removeItem("authToken");
+  await AsyncStorage.removeItem("user");
+
+  // Update the Recoil state to reflect the logged-in status
+  setLoggedIn(false);
+};
